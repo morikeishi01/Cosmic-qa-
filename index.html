@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q&A — Cosmic Inquiry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fire-orange: #ff9d00;
+      --fire-orange-glow: rgba(255, 157, 0, 0.6);
+      --fire-orange-dim: rgba(255, 157, 0, 0.15);
+      --neon-white: #f0f0f0;
+      --neon-white-dim: rgba(240, 240, 240, 0.5);
+      --glass-bg: rgba(255, 255, 255, 0.03);
+      --glass-border: rgba(255, 255, 255, 0.08);
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background: #000000;
+      color: var(--neon-white);
+      font-family: 'Noto Sans JP', 'Segoe UI', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* ════════════════════════════════════════
+       STARFIELD — 4 parallax layers
+       ════════════════════════════════════════ */
+    .stars, .stars2, .stars3, .stars4 {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .stars {
+      background:
+        radial-gradient(1px 1px at   5%  10%, rgba(255,255,255,0.9), transparent),
+        radial-gradient(1px 1px at  12%  58%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at  18%  25%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at  25%  80%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1px 1px at  33%  42%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at  40%  15%, rgba(255,255,255,0.65), transparent),
+        radial-gradient(1px 1px at  48%  68%, rgba(255,255,255,0.75), transparent),
+        radial-gradient(1px 1px at  55%  35%, rgba(255,255,255,0.55), transparent),
+        radial-gradient(1px 1px at  62%  90%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at  70%   8%, rgba(255,255,255,0.8), transparent),
+        radial-gradient(1px 1px at  78%  55%, rgba(255,255,255,0.45), transparent),
+        radial-gradient(1px 1px at  85%  28%, rgba(255,255,255,0.7), transparent),
+        radial-gradient(1px 1px at  92%  75%, rgba(255,255,255,0.65), transparent),
+        radial-gradient(1px 1px at  98%  45%, rgba(255,255,255,0.5), transparent);
+      animation: drift-slow 120s linear infinite;
+    }
+
+    .stars2 {
+      background:
+        radial-gradient(1.5px 1.5px at  8%  82%, rgba(255,157,0,0.5), transparent),
+        radial-gradient(1.2px 1.2px at  22%  15%, rgba(255,255,255,0.65), transparent),
+        radial-gradient(1px 1px at  35%  55%, rgba(255,255,255,0.5), transparent),
+        radial-gradient(1.5px 1.5px at  50%  30%, rgba(255,157,0,0.35), transparent),
+        radial-gradient(1px 1px at  65%  72%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(1px 1px at  78%  18%, rgba(255,255,255,0.55), transparent),
+        radial-gradient(1.2px 1.2px at  90%  60%, rgba(255,157,0,0.4), transparent),
+        radial-gradient(1px 1px at  15%  42%, rgba(255,255,255,0.7), transparent);
+      animation: twinkle 4s ease-in-out infinite alternate;
+    }
+
+    .stars3 {
+      background:
+        radial-gradient(2px 2px at  20%  70%, rgba(255,157,0,0.3), transparent),
+        radial-gradient(1.8px 1.8px at  42%  20%, rgba(255,255,255,0.45), transparent),
+        radial-gradient(1.5px 1.5px at  58%  85%, rgba(255,157,0,0.25), transparent),
+        radial-gradient(1px 1px at  75%  38%, rgba(255,255,255,0.6), transparent),
+        radial-gradient(2px 2px at  88%  12%, rgba(255,157,0,0.35), transparent),
+        radial-gradient(1px 1px at  30%  92%, rgba(255,255,255,0.5), transparent);
+      animation: twinkle 6s ease-in-out infinite alternate-reverse;
+    }
+
+    .stars4 {
+      background:
+        radial-gradient(2.5px 2.5px at  15%  30%, rgba(255,157,0,0.2), transparent),
+        radial-gradient(3px 3px at  60%  60%, rgba(255,157,0,0.15), transparent),
+        radial-gradient(2px 2px at  85%  85%, rgba(255,255,255,0.3), transparent),
+        radial-gradient(2.5px 2.5px at  40%  90%, rgba(255,157,0,0.2), transparent),
+        radial-gradient(2px 2px at  95%  10%, rgba(255,255,255,0.25), transparent);
+      animation: twinkle 8s ease-in-out infinite alternate, drift-slow 180s linear infinite reverse;
+    }
+
+    @keyframes twinkle {
+      0%   { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+
+    @keyframes drift-slow {
+      0%   { transform: translate(0, 0); }
+      50%  { transform: translate(-15px, 10px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    /* Nebula glow — subtle cosmic dust */
+    .nebula {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        radial-gradient(ellipse 600px 400px at 20% 80%, rgba(255,157,0,0.03), transparent),
+        radial-gradient(ellipse 500px 500px at 80% 20%, rgba(100,50,255,0.02), transparent),
+        radial-gradient(ellipse 800px 300px at 50% 50%, rgba(255,157,0,0.015), transparent);
+    }
+
+    /* ════════════════════════════════════════
+       FLOATING CONTAINER
+       ════════════════════════════════════════ */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1050px;
+      width: 92%;
+      display: flex;
+      border-radius: 20px;
+      overflow: hidden;
+      backdrop-filter: blur(20px) saturate(1.3);
+      -webkit-backdrop-filter: blur(20px) saturate(1.3);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        0 0 80px rgba(255,157,0,0.04),
+        0 30px 60px rgba(0,0,0,0.5);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-10px); }
+    }
+
+    /* ════════════════════════════════════════
+       LEFT — FORM SIDE
+       ════════════════════════════════════════ */
+    .form-side {
+      flex: 1;
+      background: #000000;
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .form-side::before {
+      content: '';
+      position: absolute;
+      top: 0; right: 0;
+      width: 1px;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        transparent,
+        rgba(255,157,0,0.2) 30%,
+        rgba(255,157,0,0.3) 50%,
+        rgba(255,157,0,0.2) 70%,
+        transparent
+      );
+    }
+
+    .title {
+      font-family: 'Orbitron', monospace;
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: 0.25em;
+      text-align: center;
+      margin-bottom: 4px;
+      animation: glow 3s ease-in-out infinite;
+      position: relative;
+    }
+
+    @keyframes glow {
+      0%, 100% {
+        text-shadow:
+          0 0  8px var(--fire-orange-glow),
+          0 0 24px var(--fire-orange-glow),
+          0 0 48px rgba(255,157,0,0.25);
+        color: var(--fire-orange);
+      }
+      50% {
+        text-shadow:
+          0 0 16px var(--fire-orange-glow),
+          0 0 40px var(--fire-orange-glow),
+          0 0 80px rgba(255,157,0,0.35),
+          0 0 120px rgba(255,157,0,0.15);
+        color: #ffbf50;
+      }
+    }
+
+    .event-info {
+      text-align: center;
+      font-family: 'Orbitron', monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.35em;
+      color: var(--neon-white-dim);
+      margin-bottom: 28px;
+      position: relative;
+    }
+
+    .event-info::before,
+    .event-info::after {
+      content: '';
+      display: inline-block;
+      width: 30px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--fire-orange-dim));
+      vertical-align: middle;
+      margin: 0 12px;
+    }
+
+    .event-info::after {
+      background: linear-gradient(to left, transparent, var(--fire-orange-dim));
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 32px;
+      line-height: 1.7;
+    }
+
+    .intro .jp {
+      font-size: 1rem;
+      font-weight: 400;
+      color: var(--neon-white);
+    }
+
+    .intro .en {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--neon-white-dim);
+      font-style: italic;
+    }
+
+    /* ──── FORM FIELDS ──── */
+    .field {
+      margin-bottom: 24px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--neon-white);
+      letter-spacing: 0.04em;
+    }
+
+    .field label span {
+      font-weight: 400;
+      font-size: 0.78rem;
+      color: var(--neon-white-dim);
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 8px;
+      padding: 14px 16px;
+      color: var(--neon-white);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.92rem;
+      outline: none;
+      transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: rgba(255,255,255,0.25);
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--fire-orange);
+      background: rgba(255,157,0,0.03);
+      box-shadow: 0 0 0 3px rgba(255,157,0,0.12), 0 0 20px rgba(255,157,0,0.08);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 120px;
+    }
+
+    /* ──── SUBMIT BUTTON ──── */
+    .submit-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      width: 100%;
+      padding: 16px 0;
+      border: 1px solid var(--fire-orange);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--fire-orange);
+      font-family: 'Orbitron', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s, opacity 0.3s, transform 0.15s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,157,0,0.15), transparent);
+      transition: left 0.5s;
+    }
+
+    .submit-btn:hover::before {
+      left: 100%;
+    }
+
+    .submit-btn .sub {
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      color: var(--neon-white-dim);
+    }
+
+    .submit-btn:hover {
+      background: var(--fire-orange);
+      color: #000;
+      box-shadow: 0 0 28px rgba(255,157,0,0.35);
+      transform: translateY(-1px);
+    }
+
+    .submit-btn:hover .sub {
+      color: rgba(0,0,0,0.5);
+    }
+
+    .submit-btn:active {
+      transform: translateY(0);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.45;
+      cursor: default;
+      transform: none;
+    }
+
+    .submit-btn:disabled::before {
+      display: none;
+    }
+
+    /* ════════════════════════════════════════
+       RIGHT — BLACK HOLE IMAGE SIDE
+       ════════════════════════════════════════ */
+    .image-side {
+      flex: 1.2;
+      position: relative;
+      min-height: 460px;
+      background:
+        url("https://upload.wikimedia.org/wikipedia/commons/e/ed/Black_Hole_with_Accretion_Disk_3.jpg")
+        center center / cover no-repeat;
+      box-shadow:
+        inset 50px 0 80px -20px rgba(0,0,0,1),
+        inset -50px 0 80px -20px rgba(0,0,0,1),
+        inset 0 50px 80px -20px rgba(0,0,0,0.95),
+        inset 0 -50px 80px -20px rgba(0,0,0,0.95);
+    }
+
+    /* Vignette overlay */
+    .image-side::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 70% 60% at 50% 50%,
+        transparent 20%,
+        rgba(0,0,0,0.4) 60%,
+        rgba(0,0,0,0.85) 100%
+      );
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* Breathing light overlay */
+    .image-side::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        ellipse 50% 40% at 50% 50%,
+        rgba(255,157,0,0.06) 0%,
+        transparent 70%
+      );
+      animation: breathe 5s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    @keyframes breathe {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50%      { opacity: 1; transform: scale(1.05); }
+    }
+
+    /* Accretion disk glow ring */
+    .accretion-glow {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 180px; height: 180px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      background: radial-gradient(
+        circle,
+        transparent 30%,
+        rgba(255,157,0,0.05) 50%,
+        rgba(255,157,0,0.1) 60%,
+        rgba(255,157,0,0.05) 70%,
+        transparent 80%
+      );
+      animation: pulse-ring 4s ease-in-out infinite;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    @keyframes pulse-ring {
+      0%, 100% { opacity: 0.5; transform: translate(-50%, -50%) scale(1); }
+      50%      { opacity: 1; transform: translate(-50%, -50%) scale(1.15); }
+    }
+
+    /* ════════════════════════════════════════
+       SUCCESS STATE
+       ════════════════════════════════════════ */
+    .success-screen {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 40px;
+      background: #000;
+      border-radius: 20px;
+      animation: fadeIn 0.8s ease;
+    }
+
+    .success-screen.visible {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .success-icon {
+      width: 80px; height: 80px;
+      border: 2px solid var(--fire-orange);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      animation: pulse-ring 3s ease-in-out infinite;
+    }
+
+    .success-icon svg {
+      width: 36px; height: 36px;
+      fill: none;
+      stroke: var(--fire-orange);
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .success-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--fire-orange);
+      letter-spacing: 0.2em;
+      margin-bottom: 8px;
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    .success-sub {
+      font-size: 0.85rem;
+      color: var(--neon-white-dim);
+      margin-bottom: 36px;
+      letter-spacing: 0.1em;
+    }
+
+    .reload-btn {
+      padding: 14px 36px;
+      border: 1px solid var(--fire-orange);
+      border-radius: 8px;
+      background: transparent;
+      color: var(--fire-orange);
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.3s, box-shadow 0.3s, transform 0.15s;
+      line-height: 1.6;
+    }
+
+    .reload-btn small {
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+    }
+
+    .reload-btn:hover {
+      background: var(--fire-orange);
+      color: #000;
+      box-shadow: 0 0 24px rgba(255,157,0,0.35);
+      transform: translateY(-1px);
+    }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE — MOBILE
+       ════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column-reverse;
+        width: 94%;
+      }
+
+      .image-side {
+        flex: none;
+        height: 260px;
+        min-height: 0;
+        box-shadow:
+          inset 0 40px 60px -15px rgba(0,0,0,1),
+          inset 0 -40px 60px -15px rgba(0,0,0,1),
+          inset 40px 0 60px -15px rgba(0,0,0,0.85),
+          inset -40px 0 60px -15px rgba(0,0,0,0.85);
+      }
+
+      .form-side {
+        padding: 36px 24px;
+      }
+
+      .form-side::before {
+        display: none;
+      }
+
+      .title {
+        font-size: 2.2rem;
+      }
+
+      .event-info::before,
+      .event-info::after {
+        width: 20px;
+        margin: 0 8px;
+      }
+
+      .success-title {
+        font-size: 1.5rem;
+      }
+
+      .success-icon {
+        width: 64px; height: 64px;
+      }
+
+      .success-icon svg {
+        width: 28px; height: 28px;
+      }
+    }
+
+    @media (max-width: 420px) {
+      .form-side {
+        padding: 28px 18px;
+      }
+
+      .title {
+        font-size: 1.8rem;
+        letter-spacing: 0.15em;
+      }
+
+      .image-side {
+        height: 200px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cosmic background layers -->
+  <div class="nebula"></div>
+  <div class="stars"></div>
+  <div class="stars2"></div>
+  <div class="stars3"></div>
+  <div class="stars4"></div>
+
+  <!-- Main container -->
+  <div class="container" id="container">
+
+    <!-- LEFT: Form -->
+    <div class="form-side" id="formSide">
+      <h1 class="title">Q&amp;A</h1>
+      <p class="event-info">2026 . 06 . 28 /// 日曜用賀劇場</p>
+      <div class="intro">
+        <p class="jp">
+          宇宙探求の旅へようこそ！<br>アン＆ロックへの質問をお待ちしております。
+        </p>
+        <span class="en">
+          Welcome to our cosmic journey! Please share your questions for An &amp; Loc.
+        </span>
+      </div>
+
+      <form id="qaForm" action="https://docs.google.com/forms/d/e/1FAIpQLSduh2SBoK818q6ImZXugYKanjmU0xYxC_9FomspQ1xga-er-A/formResponse" method="POST">
+        <div class="field">
+          <label for="nameInput">お名前 / Name <span>(Nickname OK)</span></label>
+          <input
+            type="text"
+            id="nameInput"
+            name="entry.1908060920"
+            placeholder="お名前をご入力ください / Please enter your name"
+            required
+          />
+        </div>
+
+        <div class="field">
+          <label for="questionInput">ご質問 / Your Question</label>
+          <textarea
+            id="questionInput"
+            name="entry.1534863658"
+            placeholder="ご質問内容をご記入ください / Please enter your question details"
+            required
+          ></textarea>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          <span class="main">送信</span>
+          <span class="sub">TRANSMIT</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- RIGHT: Black Hole Image -->
+    <div class="image-side">
+      <div class="accretion-glow"></div>
+    </div>
+
+    <!-- SUCCESS overlay -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+      </div>
+      <div class="success-title">送信完了</div>
+      <p class="success-sub">TRANSMISSION SUCCESSFUL</p>
+      <button class="reload-btn" id="reloadBtn">
+        新しい信号を送信<br><small>SEND NEW SIGNAL</small>
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    const form      = document.getElementById('qaForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const success   = document.getElementById('successScreen');
+    const reloadBtn = document.getElementById('reloadBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const btnMain = submitBtn.querySelector('.main');
+      const btnSub  = submitBtn.querySelector('.sub');
+
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.45';
+      btnMain.textContent = '送信中...';
+      btnSub.textContent  = 'TRANSMITTING...';
+
+      try {
+        const formData = new FormData(form);
+
+        await fetch(form.action, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData,
+        });
+
+        document.querySelector('.form-side').style.visibility = 'hidden';
+        document.querySelector('.image-side').style.visibility = 'hidden';
+        success.classList.add('visible');
+      } catch (err) {
+        alert('送信に失敗しました。もう一度お試しください。\nSubmission failed. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        btnMain.textContent = '送信';
+        btnSub.textContent  = 'TRANSMIT';
+      }
+    });
+
+    reloadBtn.addEventListener('click', () => {
+      location.reload();
+    });
+  </script>
+
+</body>
+</html>
