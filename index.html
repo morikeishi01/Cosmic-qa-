@@ -115,7 +115,6 @@
         radial-gradient(3px 3px at 30% 90%, rgba(255,157,0,0.45), transparent),
         radial-gradient(2.5px 2.5px at 65% 35%, rgba(255,255,255,0.6), transparent),
         radial-gradient(2.5px 2.5px at 90% 80%, rgba(255,157,0,0.5), transparent);
-      animation: twinkle 4s ease-in-out infinite alternate;
     }
 
     .stars-slow {
@@ -125,20 +124,11 @@
         radial-gradient(3.5px 3.5px at 75% 70%, rgba(255,157,0,0.2), transparent),
         radial-gradient(3px 3px at 60% 90%, rgba(255,255,255,0.35), transparent),
         radial-gradient(3.5px 3.5px at 88% 15%, rgba(255,157,0,0.25), transparent);
-      animation: twinkle 6s ease-in-out infinite alternate-reverse, drift 200s linear infinite;
     }
 
     @keyframes twinkle {
       0%   { opacity: 0.3; }
       100% { opacity: 1; }
-    }
-
-    @keyframes drift {
-      0%   { transform: translate(0, 0); }
-      25%  { transform: translate(-10px, 8px); }
-      50%  { transform: translate(-20px, 0); }
-      75%  { transform: translate(-10px, -8px); }
-      100% { transform: translate(0, 0); }
     }
 
     .nebula {
@@ -957,31 +947,29 @@
         }
       }
 
-      function draw(time) {
+      function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (const s of stars) {
-          const twinkle = Math.sin(time * s.speed + s.phase) * 0.3 + 0.7;
-          const a = s.alpha * twinkle;
+          const a = s.alpha;
           if (s.isOrange) {
             ctx.fillStyle = `rgba(255, 180, 60, ${a})`;
-            ctx.shadowColor = 'rgba(255, 157, 0, 0.4)';
-            ctx.shadowBlur = 6;
+            ctx.shadowColor = 'rgba(255, 157, 0, 0.3)';
+            ctx.shadowBlur = 5;
           } else {
             ctx.fillStyle = `rgba(255, 255, 255, ${a})`;
-            ctx.shadowColor = 'rgba(255, 255, 255, 0.3)';
-            ctx.shadowBlur = 4;
+            ctx.shadowColor = 'rgba(255, 255, 255, 0.2)';
+            ctx.shadowBlur = 3;
           }
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
           ctx.fill();
         }
         ctx.shadowBlur = 0;
-        requestAnimationFrame(draw);
       }
 
       resize();
       createStars();
-      requestAnimationFrame(draw);
+      draw();
       window.addEventListener('resize', () => { resize(); createStars(); });
     })();
 
