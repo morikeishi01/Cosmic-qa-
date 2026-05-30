@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Q&A — Cosmic Inquiry</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Orbitron:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --fire-orange: #ff9d00;
+      --fire-orange-light: #ffb340;
+      --fire-orange-glow: rgba(255, 157, 0, 0.6);
+      --fire-orange-dim: rgba(255, 157, 0, 0.15);
+      --neon-white: #e8e8e8;
+      --neon-white-dim: rgba(232, 232, 232, 0.45);
+      --text-secondary: rgba(232, 232, 232, 0.6);
+      --glass-bg: rgba(0, 0, 0, 0.6);
+      --glass-border: rgba(255, 255, 255, 0.06);
+      --input-bg: rgba(255, 255, 255, 0.05);
+      --input-border: rgba(255, 255, 255, 0.1);
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      background: #000000;
+      color: var(--neon-white);
+      font-family: 'Inter', 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      position: relative;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ════════════════════════════════════════
+       MAIN CONTAINER — 2 COLUMNS
+       ════════════════════════════════════════ */
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      width: 92%;
+      display: flex;
+      border-radius: 24px;
+      overflow: hidden;
+      backdrop-filter: blur(30px) saturate(1.3);
+      -webkit-backdrop-filter: blur(30px) saturate(1.3);
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      box-shadow:
+        0 0 150px rgba(255,157,0,0.05),
+        0 40px 80px rgba(0,0,0,0.6),
+        0 0 1px rgba(255,255,255,0.1);
+      animation: float 8s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50%      { transform: translateY(-12px); }
+    }
+
+    /* ════════════════════════════════════════
+       LEFT — FORM SIDE
+       ════════════════════════════════════════ */
+    .form-side {
+      flex: 1;
+      background: rgba(0,0,0,0.75);
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .form-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .title {
+      font-family: 'Orbitron', monospace;
+      font-size: 3rem;
+      font-weight: 900;
+      letter-spacing: 0.3em;
+      margin-bottom: 6px;
+      animation: glow 4s ease-in-out infinite;
+      background: linear-gradient(135deg, var(--fire-orange), var(--fire-orange-light), #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 0 30px rgba(255,157,0,0.5));
+    }
+
+    @keyframes glow {
+      0%, 100% { filter: drop-shadow(0 0 30px rgba(255,157,0,0.5)); }
+      50% { filter: drop-shadow(0 0 60px rgba(255,157,0,0.7)) drop-shadow(0 0 120px rgba(255,157,0,0.3)); }
+    }
+
+    .event-info {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.4em;
+      color: var(--neon-white-dim);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .event-info .venue {
+      font-family: 'Noto Sans JP', sans-serif;
+      font-size: 0.78rem;
+      letter-spacing: 0.25em;
+      color: var(--neon-white-dim);
+      font-weight: 400;
+    }
+
+    .event-info .date {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.45em;
+      color: rgba(255,157,0,0.45);
+    }
+
+    .event-info .divider {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(to right, transparent, var(--fire-orange-dim), transparent);
+    }
+
+    .intro {
+      text-align: center;
+      margin-bottom: 32px;
+      line-height: 1.8;
+    }
+
+    .intro .jp {
+      font-size: 0.92rem;
+      font-weight: 400;
+      color: var(--neon-white);
+    }
+
+    .intro .en {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .field {
+      margin-bottom: 24px;
+    }
+
+    .field label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: var(--neon-white);
+    }
+
+    .field label .hint {
+      font-weight: 400;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      margin-left: 4px;
+    }
+
+    .field input,
+    .field textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--input-border);
+      border-radius: 10px;
+      padding: 13px 16px;
+      color: var(--neon-white);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .field input::placeholder,
+    .field textarea::placeholder {
+      color: rgba(255,255,255,0.2);
+      font-weight: 300;
+    }
+
+    .field input:focus,
+    .field textarea:focus {
+      border-color: var(--fire-orange);
+      background: rgba(255,157,0,0.04);
+      box-shadow: 0 0 0 3px rgba(255,157,0,0.1), 0 0 20px rgba(255,157,0,0.06);
+    }
+
+    .field textarea {
+      resize: vertical;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    .submit-btn {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      width: 100%;
+      padding: 15px 0;
+      border: 1px solid rgba(255,157,0,0.5);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--fire-orange);
+      font-family: 'Orbitron', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .submit-btn::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,157,0,0.1), transparent);
+      transition: left 0.6s;
+    }
+
+    .submit-btn:hover::before { left: 100%; }
+
+    .submit-btn .sub {
+      font-size: 0.52rem;
+      letter-spacing: 0.35em;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    .submit-btn:hover {
+      background: var(--fire-orange);
+      border-color: var(--fire-orange);
+      color: #000;
+      box-shadow: 0 0 28px rgba(255,157,0,0.3);
+      transform: translateY(-2px);
+    }
+
+    .submit-btn:hover .sub { color: rgba(0,0,0,0.45); }
+    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+    .submit-btn:disabled::before { display: none; }
+
+    /* ════════════════════════════════════════
+       RIGHT — GALAXY 3D SCENE
+       ════════════════════════════════════════ */
+    .cosmic-side {
+      flex: 1.2;
+      position: relative;
+      min-height: 520px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .galaxy-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100% !important;
+      height: 100% !important;
+      z-index: 1;
+      display: block;
+    }
+
+    .cosmic-vignette {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      background: radial-gradient(ellipse 75% 70% at 50% 50%, transparent 20%, rgba(0,0,0,0.3) 55%, rgba(0,0,0,0.8) 85%, #000 100%);
+      box-shadow:
+        inset 40px 0 60px -10px rgba(0,0,0,0.9),
+        inset -40px 0 60px -10px rgba(0,0,0,0.9),
+        inset 0 30px 50px -10px rgba(0,0,0,0.8),
+        inset 0 -30px 50px -10px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+
+    /* Separator line */
+    .separator {
+      position: absolute;
+      top: 0; right: 0;
+      width: 1px;
+      height: 100%;
+      z-index: 8;
+      background: linear-gradient(
+        to bottom,
+        transparent 5%,
+        rgba(255,157,0,0.15) 25%,
+        rgba(255,157,0,0.25) 50%,
+        rgba(255,157,0,0.15) 75%,
+        transparent 95%
+      );
+    }
+
+    /* ════════════════════════════════════════
+       SUCCESS STATE
+       ════════════════════════════════════════ */
+    .success-screen {
+      display: none;
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 60px 40px;
+      background: rgba(0,0,0,0.92);
+      border-radius: 24px;
+      backdrop-filter: blur(20px);
+      animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .success-screen.visible { display: flex; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.96); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+
+    .success-icon {
+      width: 80px; height: 80px;
+      border: 2px solid rgba(255,157,0,0.6);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 24px;
+      box-shadow: 0 0 25px rgba(255,157,0,0.15);
+    }
+
+    .success-icon svg {
+      width: 34px; height: 34px;
+      fill: none;
+      stroke: var(--fire-orange);
+      stroke-width: 2.5;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .success-title {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--fire-orange);
+      letter-spacing: 0.25em;
+      margin-bottom: 8px;
+      animation: glow 3s ease-in-out infinite;
+    }
+
+    .success-sub {
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      margin-bottom: 36px;
+      letter-spacing: 0.15em;
+    }
+
+    .reload-btn {
+      padding: 14px 36px;
+      border: 1px solid rgba(255,157,0,0.5);
+      border-radius: 10px;
+      background: transparent;
+      color: var(--fire-orange);
+      font-family: 'Inter', 'Noto Sans JP', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      line-height: 1.7;
+    }
+
+    .reload-btn small {
+      font-size: 0.62rem;
+      letter-spacing: 0.25em;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    .reload-btn:hover {
+      background: var(--fire-orange);
+      border-color: var(--fire-orange);
+      color: #000;
+      box-shadow: 0 0 24px rgba(255,157,0,0.3);
+      transform: translateY(-2px);
+    }
+
+    .reload-btn:hover small { color: rgba(0,0,0,0.45); }
+
+    /* ════════════════════════════════════════
+       RESPONSIVE
+       ════════════════════════════════════════ */
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column-reverse;
+        width: 94%;
+        border-radius: 20px;
+      }
+
+      .cosmic-side {
+        flex: none;
+        height: 280px;
+        min-height: 0;
+      }
+
+      .form-side { padding: 36px 24px; }
+      .separator { display: none; }
+
+      .title {
+        font-size: 2.2rem;
+        letter-spacing: 0.2em;
+      }
+
+      .success-title { font-size: 1.5rem; }
+      .success-icon { width: 64px; height: 64px; }
+      .success-icon svg { width: 28px; height: 28px; }
+    }
+
+    @media (max-width: 480px) {
+      .form-side { padding: 28px 18px; }
+      .title { font-size: 1.8rem; letter-spacing: 0.15em; }
+      .event-info { font-size: 0.6rem; letter-spacing: 0.25em; }
+      .cosmic-side { height: 220px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="container">
+
+    <!-- LEFT: Form -->
+    <div class="form-side" id="formSide">
+      <div class="separator"></div>
+      <div class="form-content">
+        <div class="header">
+          <h1 class="title">Q&amp;A</h1>
+          <div class="event-info">
+            <span class="venue">日曜用賀劇場</span>
+            <span class="divider"></span>
+            <span class="date">2026 . 06 . 28</span>
+          </div>
+        </div>
+
+        <div class="intro">
+          <p class="jp">
+            貴重なお時間を割いてご質問をお寄せいただき、<br>誠にありがとうございます。
+          </p>
+          <span class="en">
+            Thank you for taking the time to share your questions with us.
+          </span>
+        </div>
+
+        <form id="qaForm" action="https://docs.google.com/forms/d/e/1FAIpQLSduh2SBoK818q6ImZXugYKanjmU0xYxC_9FomspQ1xga-er-A/formResponse" method="POST">
+          <div class="field">
+            <label for="nameInput">お名前 / Name <span class="hint">(Nickname OK)</span></label>
+            <input type="text" id="nameInput" name="entry.437985863" placeholder="お名前をご入力ください / Please enter your name" required />
+          </div>
+
+          <div class="field">
+            <label for="questionInput">ご質問 / Your Question</label>
+            <textarea id="questionInput" name="entry.194700298" placeholder="ご質問内容をご記入ください / Please enter your question details" required></textarea>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <span class="main">送信</span>
+            <span class="sub">TRANSMIT</span>
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <!-- RIGHT: Galaxy 3D -->
+    <div class="cosmic-side" id="cosmicSide">
+      <canvas class="galaxy-canvas" id="galaxyCanvas"></canvas>
+      <div class="cosmic-vignette"></div>
+    </div>
+
+    <!-- SUCCESS overlay -->
+    <div class="success-screen" id="successScreen">
+      <div class="success-icon">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <div class="success-title">送信完了</div>
+      <p class="success-sub">TRANSMISSION SUCCESSFUL</p>
+      <button class="reload-btn" id="reloadBtn">
+        新しい信号を送信<br><small>SEND NEW SIGNAL</small>
+      </button>
+    </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r132/three.min.js"></script>
+  <script>
+    if (typeof THREE === 'undefined') {
+      // Three.js failed to load - show fallback
+      const cosmicSide = document.getElementById('cosmicSide');
+      cosmicSide.style.background = 'radial-gradient(ellipse at center, #0a0520 0%, #000 100%)';
+      cosmicSide.innerHTML = '<div style="position:absolute;inset:0;background:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,0.6),transparent),radial-gradient(1px 1px at 60% 70%,rgba(255,255,255,0.5),transparent),radial-gradient(1.5px 1.5px at 40% 50%,rgba(255,157,0,0.4),transparent),radial-gradient(1px 1px at 80% 20%,rgba(255,255,255,0.5),transparent),radial-gradient(1.5px 1.5px at 15% 80%,rgba(255,157,0,0.35),transparent),radial-gradient(1px 1px at 50% 15%,rgba(255,255,255,0.45),transparent),radial-gradient(1.5px 1.5px at 75% 45%,rgba(255,157,0,0.3),transparent),radial-gradient(1px 1px at 35% 65%,rgba(255,255,255,0.4),transparent),radial-gradient(1.5px 1.5px at 90% 85%,rgba(255,157,0,0.25),transparent),radial-gradient(1px 1px at 10% 90%,rgba(255,255,255,0.35),transparent);z-index:1"></div><div style="position:absolute;inset:0;z-index:2;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.5) 70%,#000 100%)"></div>';
+    } else {
+      try {
+        const { Scene, PerspectiveCamera, WebGLRenderer, PointsMaterial, BufferGeometry, BufferAttribute, Color, Points, AdditiveBlending, Clock } = THREE;
+
+    // Galaxy parameters
+    const parameters = {
+      count: 60000,
+      size: 0.006,
+      radius: 2.2,
+      branches: 3,
+      spin: 2.5,
+      randomness: 4,
+      randomnessPower: 3.5,
+      insideColor: '#ff6030',
+      outsideColor: '#1a3a8a'
+    };
+
+    const cosmicSide = document.getElementById('cosmicSide');
+    const canvas = document.getElementById('galaxyCanvas');
+    const scene = new Scene();
+
+    let material = null;
+    let geometry = null;
+    let points = null;
+
+    const generateGalaxy = () => {
+      if (points !== null && geometry && material) {
+        geometry.dispose();
+        material.dispose();
+        scene.remove(points);
+      }
+
+      material = new PointsMaterial({
+        size: parameters.size,
+        sizeAttenuation: true,
+        depthWrite: false,
+        blending: AdditiveBlending,
+        vertexColors: true
+      });
+
+      geometry = new BufferGeometry();
+      const positions = new Float32Array(parameters.count * 3);
+      const colors = new Float32Array(parameters.count * 3);
+      const colorInside = new Color(parameters.insideColor);
+      const colorOutside = new Color(parameters.outsideColor);
+
+      for (let i = 0; i < parameters.count; i++) {
+        const i3 = i * 3;
+        const radius = Math.pow(Math.random() * parameters.randomness, Math.random() * parameters.radius);
+        const spinAngle = radius * parameters.spin;
+        const branchAngle = ((i % parameters.branches) / parameters.branches) * Math.PI * 2;
+
+        const negPos = [1, -1];
+        const randomX = Math.pow(Math.random(), parameters.randomnessPower) * negPos[Math.floor(Math.random() * negPos.length)];
+        const randomY = Math.pow(Math.random(), parameters.randomnessPower) * negPos[Math.floor(Math.random() * negPos.length)];
+        const randomZ = Math.pow(Math.random(), parameters.randomnessPower) * negPos[Math.floor(Math.random() * negPos.length)];
+
+        positions[i3] = Math.cos(branchAngle + spinAngle) * radius + randomX;
+        positions[i3 + 1] = randomY;
+        positions[i3 + 2] = Math.sin(branchAngle + spinAngle) * radius + randomZ;
+
+        const mixedColor = colorInside.clone();
+        mixedColor.lerp(colorOutside, Math.random() * radius / parameters.radius);
+
+        colors[i3] = mixedColor.r;
+        colors[i3 + 1] = mixedColor.g;
+        colors[i3 + 2] = mixedColor.b;
+      }
+
+      geometry.setAttribute('position', new BufferAttribute(positions, 3));
+      geometry.setAttribute('color', new BufferAttribute(colors, 3));
+
+      points = new Points(geometry, material);
+      scene.add(points);
+    };
+
+    generateGalaxy();
+
+    // Get cosmic-side dimensions
+    let sizes = { width: cosmicSide.offsetWidth, height: cosmicSide.offsetHeight };
+
+    const camera = new PerspectiveCamera(60, sizes.width / sizes.height, 0.1, 100);
+    camera.position.set(2, 1.5, 2);
+    scene.add(camera);
+
+    const renderer = new WebGLRenderer({ canvas, alpha: true, antialias: true });
+    renderer.setSize(sizes.width, sizes.height);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    renderer.setClearColor(0x000000, 1);
+
+    // Resize handler
+    window.addEventListener('resize', () => {
+      sizes.width = cosmicSide.offsetWidth;
+      sizes.height = cosmicSide.offsetHeight;
+      camera.aspect = sizes.width / sizes.height;
+      camera.updateProjectionMatrix();
+      renderer.setSize(sizes.width, sizes.height);
+    });
+
+    const clock = new Clock();
+
+    const tick = () => {
+      const elapsedTime = clock.getElapsedTime();
+      camera.position.x = Math.cos(elapsedTime * 0.05) * 2.5;
+      camera.position.z = Math.sin(elapsedTime * 0.05) * 2.5;
+      camera.position.y = Math.sin(elapsedTime * 0.02) * 0.3 + 1;
+      camera.lookAt(0, 0, 0);
+      renderer.render(scene, camera);
+      window.requestAnimationFrame(tick);
+    };
+
+    tick();
+
+    } catch (e) {
+      console.error('Galaxy animation failed:', e);
+      // Fallback: add CSS stars to cosmic-side
+      const cosmicSide = document.getElementById('cosmicSide');
+      cosmicSide.style.background = 'radial-gradient(ellipse at center, #0a0520 0%, #000 100%)';
+      cosmicSide.innerHTML = '<div style="position:absolute;inset:0;background:radial-gradient(1px 1px at 20% 30%,rgba(255,255,255,0.6),transparent),radial-gradient(1px 1px at 60% 70%,rgba(255,255,255,0.5),transparent),radial-gradient(1.5px 1.5px at 40% 50%,rgba(255,157,0,0.4),transparent),radial-gradient(1px 1px at 80% 20%,rgba(255,255,255,0.5),transparent),radial-gradient(1.5px 1.5px at 15% 80%,rgba(255,157,0,0.35),transparent);z-index:1"></div><div style="position:absolute;inset:0;z-index:2;background:radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,0.5) 70%,#000 100%)"></div>';
+    }
+    } // end else THREE exists
+
+    // Form logic
+    const form = document.getElementById('qaForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const success = document.getElementById('successScreen');
+    const reloadBtn = document.getElementById('reloadBtn');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btnMain = submitBtn.querySelector('.main');
+      const btnSub = submitBtn.querySelector('.sub');
+
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = '0.4';
+      btnMain.textContent = '送信中...';
+      btnSub.textContent = 'TRANSMITTING...';
+
+      try {
+        const formData = new FormData(form);
+        await fetch(form.action, { method: 'POST', mode: 'no-cors', body: formData });
+        document.querySelector('.form-side').style.visibility = 'hidden';
+        document.querySelector('.cosmic-side').style.visibility = 'hidden';
+        success.classList.add('visible');
+      } catch (err) {
+        alert('送信に失敗しました。もう一度お試しください。\nSubmission failed. Please try again.');
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = '1';
+        btnMain.textContent = '送信';
+        btnSub.textContent = 'TRANSMIT';
+      }
+    });
+
+    reloadBtn.addEventListener('click', () => location.reload());
+  </script>
+
+</body>
+</html>
