@@ -424,24 +424,69 @@
        RESPONSIVE
        ════════════════════════════════════════ */
     @media (max-width: 768px) {
+      body {
+        align-items: flex-start;
+        padding-top: 20px;
+      }
+
       .container {
         flex-direction: column-reverse;
         width: 94%;
+        max-width: 100%;
         border-radius: 20px;
+        animation: none;
       }
 
       .cosmic-side {
         flex: none;
-        height: 280px;
+        height: 200px;
         min-height: 0;
       }
 
-      .form-side { padding: 36px 24px; }
+      .form-side {
+        padding: 28px 20px;
+      }
+
       .separator { display: none; }
 
       .title {
-        font-size: 2.2rem;
+        font-size: 2rem;
         letter-spacing: 0.2em;
+      }
+
+      .event-info .venue {
+        font-size: 0.7rem;
+      }
+
+      .event-info .date {
+        font-size: 0.6rem;
+      }
+
+      .intro .jp {
+        font-size: 0.85rem;
+      }
+
+      .intro .en {
+        font-size: 0.68rem;
+      }
+
+      .field label {
+        font-size: 0.75rem;
+      }
+
+      .field input,
+      .field textarea {
+        padding: 11px 14px;
+        font-size: 0.85rem;
+      }
+
+      .field textarea {
+        min-height: 100px;
+      }
+
+      .submit-btn {
+        padding: 13px 0;
+        font-size: 0.88rem;
       }
 
       .success-title { font-size: 1.5rem; }
@@ -450,10 +495,79 @@
     }
 
     @media (max-width: 480px) {
-      .form-side { padding: 28px 18px; }
-      .title { font-size: 1.8rem; letter-spacing: 0.15em; }
-      .event-info { font-size: 0.6rem; letter-spacing: 0.25em; }
-      .cosmic-side { height: 220px; }
+      body {
+        padding-top: 10px;
+      }
+
+      .container {
+        width: 96%;
+        border-radius: 16px;
+      }
+
+      .form-side {
+        padding: 24px 16px;
+      }
+
+      .title {
+        font-size: 1.7rem;
+        letter-spacing: 0.15em;
+      }
+
+      .event-info .venue {
+        font-size: 0.65rem;
+        letter-spacing: 0.2em;
+      }
+
+      .event-info .date {
+        font-size: 0.55rem;
+      }
+
+      .intro {
+        margin-bottom: 24px;
+      }
+
+      .intro .jp {
+        font-size: 0.8rem;
+      }
+
+      .field {
+        margin-bottom: 18px;
+      }
+
+      .field input,
+      .field textarea {
+        padding: 10px 12px;
+        font-size: 0.82rem;
+        border-radius: 8px;
+      }
+
+      .field textarea {
+        min-height: 90px;
+      }
+
+      .submit-btn {
+        padding: 12px 0;
+        font-size: 0.82rem;
+        border-radius: 8px;
+      }
+
+      .cosmic-side {
+        height: 160px;
+      }
+
+      .cosmic-vignette {
+        box-shadow:
+          inset 30px 0 50px -10px rgba(0,0,0,0.9),
+          inset -30px 0 50px -10px rgba(0,0,0,0.9),
+          inset 0 20px 40px -10px rgba(0,0,0,0.8),
+          inset 0 -20px 40px -10px rgba(0,0,0,0.8);
+      }
+
+      .success-title { font-size: 1.3rem; letter-spacing: 0.15em; }
+      .success-icon { width: 56px; height: 56px; }
+      .success-icon svg { width: 24px; height: 24px; }
+      .success-sub { font-size: 0.7rem; margin-bottom: 28px; }
+      .reload-btn { padding: 12px 28px; font-size: 0.82rem; }
     }
   </style>
 </head>
